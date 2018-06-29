@@ -1,0 +1,13 @@
+model {
+tau ~ dgamma(0.01,0.01)
+m1 ~ dnorm(0,0.01) # slope m and intercept b for segment 1
+b1 ~ dnorm(0,0.01)
+m2 ~ dnorm(0,0.01) # slope m and intercept b for segment 2
+b2 ~ dnorm(0,0.01)
+for(i in 1:N) {
+p[i] <- 1/N # each x has an equal priori probability to be T
+mu[i] <- step(T-i)*(m1*x[i]+b1) + step(i-T-1)*(m2*x[i]+b2)
+y[i] ~ dnorm(mu[i],tau)
+}
+T ~ dcat(p) # the threshold or cut point
+}
